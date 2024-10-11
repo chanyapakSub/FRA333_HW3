@@ -31,8 +31,8 @@ def endEffectorJacobianHW3(q:list[float])->list[float]:
 
     return J_q
 # print(endEffectorJacobianHW3([0,0,0]))
-
 #==============================================================================================================#
+
 #=============================================<คำตอบข้อ 2>======================================================#
 #code here
 def checkSingularityHW3(q:list[float])->bool:
@@ -49,8 +49,19 @@ def checkSingularityHW3(q:list[float])->bool:
     return False
 # print(checkSingularityHW3([4.71830409,2.78974574, 0.69907425]))
 #==============================================================================================================#
+
 #=============================================<คำตอบข้อ 3>======================================================#
 #code here
 def computeEffortHW3(q:list[float], w:list[float])->list[float]:
-    pass
+    J_e = endEffectorJacobianHW3(q)
+    w = np.array(w)
+    J_t = np.transpose(J_e)
+    tau = J_t @ w  #Calculate torque effect 
+    return tau
+
+# Random
+q = [0, 0, 0] 
+w = [10, 5, 2, 0, 0, 0]  # wrech [Fx,Fy,Fz,Wx,Wy,Wz]
+
+# print(computeEffortHW3(q, w))
 #==============================================================================================================#
