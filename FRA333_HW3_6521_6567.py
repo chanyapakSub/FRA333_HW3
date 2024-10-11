@@ -18,7 +18,7 @@ def endEffectorJacobianHW3(q:list[float])->list[float]:
     for i in range(len(q)):
 
         #Jacobian linear velocity 
-        J_v = np.cross(R[:,:,i][:,2],(p_e - P[:,i])) 
+        J_v = np.cross(R[:,:,i][:,3],(p_e - P[:,i])) 
 
         #Jacobian angular velocity
         J_w = R[:,:,i][:,2]     
@@ -31,6 +31,9 @@ def endEffectorJacobianHW3(q:list[float])->list[float]:
 
     return J_q
 print(endEffectorJacobianHW3([0,0,0]))
+
+
+#
 #==============================================================================================================#
 #=============================================<คำตอบข้อ 2>======================================================#
 #code here
