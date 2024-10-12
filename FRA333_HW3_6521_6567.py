@@ -6,15 +6,20 @@
 2.ชัญญาภัค_6567
 3.
 '''
+# ==============================================================================================================#
 #Import Library
 import numpy as np
 import HW3_utils
 
 #=============================================<คำตอบข้อ 1>======================================================#
-#code here
 def endEffectorJacobianHW3(q:list[float])->list[float]:
+
+    #Get Rotation Matrix and Traslation Matrix from HW3_utils.py
     R,P,R_e,p_e = HW3_utils.FKHW3(q)
+
+    #Create Jacobian Matrix (6 row and 3 column)
     J_q = np.empty((6,3))
+
     for i in range(len(q)):
 
         #Jacobian linear velocity 
@@ -30,23 +35,27 @@ def endEffectorJacobianHW3(q:list[float])->list[float]:
         J_q[:,i] = J_i   
 
     return J_q
+
 # print(endEffectorJacobianHW3([0,0,0]))
 #==============================================================================================================#
 
 #=============================================<คำตอบข้อ 2>======================================================#
-#code here
 def checkSingularityHW3(q:list[float])->bool:
+
     J_q = endEffectorJacobianHW3(q)
-    # ใช้เฉพาะส่วนของ Jacobian ที่เกี่ยวข้องกับการเคลื่อนที่เชิงเส้น (3x3 matrix)
+
+    #Part of linear velocity(3x3 matrix)
     J_v_part = J_q[:3, :]
-    # คำนวณ Determinant ของ Jacobian ส่วนที่เกี่ยวข้องกับการเคลื่อนที่เชิงเส้น
+
+    #Determinant of Jacobian
     determinant = np.linalg.det(J_v_part)
-    # ตรวจสอบว่า Jacobian มีค่า determinant เป็นศูนย์หรือไม่
-    if abs(determinant) < 1e-3:  # กำหนด threshold ใกล้ศูนย์
-        # print("อยู่ในจุด Singularity")
+
+    if abs(determinant) < 1e-3:
+        #Near Singularity 
         return True
-    # print("ไม่อยู่ในจุด Singularity")
+    #Non Singularity
     return False
+
 # print(checkSingularityHW3([4.71830409,2.78974574, 0.69907425]))
 #==============================================================================================================#
 
