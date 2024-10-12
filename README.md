@@ -281,6 +281,6 @@ proofEffort(robot)
 ![alt text](image.png)
 
 - เปรียบเทียบ Torque ที่หาจาก solution VS Torque ที่หาจาก Robotic Toolbox 
-  - Torque ที่หาจาก solution : นำ Jacobian ที่หาได้จากข้อที่ 1 มาลดรูปโดยเลือกเฉพาะ 3 แถวแรกที่เป็นส่วน linear velocity เพราะเป็นส่วนที่สามารถควบคุมได้ แล้วนำมาหา determinant โดยหากมีค่าน้อยกว่า 0.001 หมายถึงเข้าใกล้สภาวะ Singularity 
-  - Torque ที่หาจาก Robotic Toolbox : นำJacobian เทียบเฟรม base ที่ได้จาก Robotic Toolbox มาทำเช่นเดียวกับวิธี Solution
-- random ค่า q และแทนค่า เพื่อหาสภาวะ Singularity และนำมาเปรียบเทียบกันว่าถูกต้องหรือไม่ 
+  - Torque ที่หาจาก solution : นำ Jacobian ที่หาได้จากข้อที่ 1 มาทรานสโพส และนำมาคูณกับ Wrench ที่ได้จากการแปลงแรงและโมเมนต์
+  - Torque ที่หาจาก Robotic Toolbox : นำ Wrench และ q และ joint effort frame 1 มาใช้ .pay หา Torque
+- random ค่า q,Wrench และแทนค่า เพื่อหา Torque และนำมาเปรียบเทียบกันว่าถูกต้องหรือไม่ 
