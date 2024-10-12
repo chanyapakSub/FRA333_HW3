@@ -206,6 +206,7 @@ print("ผลลัพธ์สุดท้าย:", proveSingularity(q,robot))
 - f_0 และ n_0: แรงและโมเมนต์ที่แปลงมาอยู่ในเฟรมฐาน
   
 2. การรวมแรงและโมเมนต์เป็น Wrench
+
 ![alt text](image-2.png)
 
 
@@ -213,6 +214,7 @@ print("ผลลัพธ์สุดท้าย:", proveSingularity(q,robot))
     โดยมี 3 องค์ประกอบแรกเป็นแรง และ 3 องค์ประกอบหลังเป็นโมเมนต์
 
 3. Jacobian Matrix และการคำนวณ Torque
+
 ![alt text](image-3.png)
 
 ```bash
