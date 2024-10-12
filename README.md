@@ -186,8 +186,8 @@ print("ผลลัพธ์สุดท้าย:", proveSingularity(q,robot))
 
 - เปรียบเทียบ Singularity ที่หาจาก solution VS Singularity ที่หาจาก Robotic Toolbox 
   - Singularity ที่หาจาก solution : นำ Jacobian ที่หาได้จากข้อที่ 1 มาลดรูปโดยเลือกเฉพาะ 3 แถวแรกที่เป็นส่วน linear velocity เพราะเป็นส่วนที่สามารถควบคุมได้ แล้วนำมาหา determinant โดยหากมีค่าน้อยกว่า 0.001 หมายถึงเข้าใกล้สภาวะ Singularity 
-  - Singularity ที่หาจาก Robotic Toolbox : นำJacobian เทียบเฟรม base ที่ได้จาก Robotic Toolbox มาทำเช่นเดียวกับวิธี Solution และนำมาเปรียบเทียบกัน 
-- random ค่า q และแทนค่า เพื่อหาสภาวะ Singularity
+  - Singularity ที่หาจาก Robotic Toolbox : นำJacobian เทียบเฟรม base ที่ได้จาก Robotic Toolbox มาทำเช่นเดียวกับวิธี Solution
+- random ค่า q และแทนค่า เพื่อหาสภาวะ Singularity และนำมาเปรียบเทียบกันว่าถูกต้องหรือไม่ 
 - ตัวอย่างค่า q ที่ทำให้เกิด Sigularity ex. q = [5.88029104 1.70964541 3.03725032]
 
 
