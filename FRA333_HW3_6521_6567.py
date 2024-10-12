@@ -18,7 +18,7 @@ def endEffectorJacobianHW3(q:list[float])->list[float]:
     R,P,R_e,p_e = HW3_utils.FKHW3(q)
 
     #Create Jacobian Matrix (6 row and 3 column)
-    J_q = np.empty((6,3))
+    J_e = np.empty((6,3))
 
     for i in range(len(q)):
 
@@ -32,9 +32,9 @@ def endEffectorJacobianHW3(q:list[float])->list[float]:
         J_i = np.concatenate((J_v,J_w),axis=0)       
 
         #Append Jacobian of each joint
-        J_q[:,i] = J_i   
+        J_e[:,i] = J_i   
 
-    return J_q
+    return J_e
 #==============================================================================================================#
 
 #=============================================<คำตอบข้อ 2>======================================================#

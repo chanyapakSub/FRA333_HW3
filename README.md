@@ -63,7 +63,7 @@ def endEffectorJacobianHW3(q:list[float])->list[float]:
     R,P,R_e,p_e = HW3_utils.FKHW3(q)
 
     #Create Jacobian Matrix (6 row and 3 column)
-    J_q = np.empty((6,3))
+    J_e = np.empty((6,3))
 
     for i in range(len(q)):
 
@@ -77,9 +77,9 @@ def endEffectorJacobianHW3(q:list[float])->list[float]:
         J_i = np.concatenate((J_v,J_w),axis=0)       
 
         #Append Jacobian of each joint
-        J_q[:,i] = J_i   
+        J_e[:,i] = J_i   
 
-    return J_q
+    return J_e
 ```
 
 ### check answer  
@@ -192,9 +192,23 @@ print("ผลลัพธ์สุดท้าย:", proveSingularity(q,robot))
 
 
 ## Prove3 : Compute Effort
-
 ### solution 
 ฟังก์ชัน computeEffortHW3 คำนวณแรงบิด (torque) ที่เกิดขึ้นกับข้อต่อ (joint) ของหุ่นยนต์ โดยอาศัยการแปลงแรง (force) และโมเมนต์ (moment) ที่กระทำกับเอ็นเอฟเฟกเตอร์ (end-effector) ให้อยู่ในระบบพิกัดฐาน (base frame) ผ่าน Jacobian matrix
+                        
+    1. การแปลงแรงและโมเมนต์ไปยังพิกัดฐาน
+![alt text](image-1.png)
+        - R_e: เมทริกซ์การหมุนจากเอ็นเอฟเฟกเตอร์ไปยังเฟรมฐาน
+        - f_e: เวกเตอร์แรงในเฟรมของเอ็นเอฟเฟกเตอร์ (เช่น [fₓ, fᵧ, f_z])
+        - n_e: เวกเตอร์โมเมนต์ในเฟรมของเอ็นเอฟเฟกเตอร์ (เช่น [nₓ, nᵧ, n_z])
+        - f_0 และ n_0: แรงและโมเมนต์ที่แปลงมาอยู่ในเฟรมฐาน
+  
+    2. การรวมแรงและโมเมนต์เป็น Wrench
+![alt text](image-2.png)
+        -w_0 คือเวกเตอร์ wrench ที่รวมแรงและโมเมนต์อยู่ในระบบพิกัดฐาน ขนาดของมันคือ 6×1
+         โดยมี 3 องค์ประกอบแรกเป็นแรง และ 3 องค์ประกอบหลังเป็นโมเมนต์
+    3. Jacobian Matrix และการคำนวณ Torque
+![alt text](image-3.png)
+
 ```bash
 def computeEffortHW3(q: list[float], w: list[float]) -> list[float]:
 
@@ -255,6 +269,10 @@ def proofEffort(robot):
         
 proofEffort(robot)
 ```
-
 - Result
 ![alt text](image.png)
+
+- เปรียบเทียบ Torque ที่หาจาก solution VS Torque ที่หาจาก Robotic Toolbox 
+  - Torque ที่หาจาก solution : นำ Jacobian ที่หาได้จากข้อที่ 1 มาลดรูปโดยเลือกเฉพาะ 3 แถวแรกที่เป็นส่วน linear velocity เพราะเป็นส่วนที่สามารถควบคุมได้ แล้วนำมาหา determinant โดยหากมีค่าน้อยกว่า 0.001 หมายถึงเข้าใกล้สภาวะ Singularity 
+  - Torque ที่หาจาก Robotic Toolbox : นำJacobian เทียบเฟรม base ที่ได้จาก Robotic Toolbox มาทำเช่นเดียวกับวิธี Solution
+- random ค่า q และแทนค่า เพื่อหาสภาวะ Singularity และนำมาเปรียบเทียบกันว่าถูกต้องหรือไม่ 
