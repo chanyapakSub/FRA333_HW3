@@ -35,8 +35,6 @@ def endEffectorJacobianHW3(q:list[float])->list[float]:
         J_q[:,i] = J_i   
 
     return J_q
-
-# print(endEffectorJacobianHW3([0,0,0]))
 #==============================================================================================================#
 
 #=============================================<คำตอบข้อ 2>======================================================#
@@ -53,24 +51,33 @@ def checkSingularityHW3(q:list[float])->bool:
     if abs(determinant) < 1e-3:
         #Near Singularity 
         return True
-    #Non Singularity
-    return False
-
-# print(checkSingularityHW3([4.71830409,2.78974574, 0.69907425]))
+    else:
+        #Non Singularity
+        return False
 #==============================================================================================================#
 
 #=============================================<คำตอบข้อ 3>======================================================#
-#code here
-def computeEffortHW3(q:list[float], w:list[float])->list[float]:
-    J_e = endEffectorJacobianHW3(q)
-    w = np.array(w)
-    J_t = np.transpose(J_e)
-    tau = J_t @ w  #Calculate torque effect 
+def computeEffortHW3(q: list[float], w: list[float]) -> list[float]:
+
+    J = endEffectorJacobianHW3(q)
+    
+    R, P, R_e, p_e = HW3_utils.FKHW3(q)
+
+    # Force
+    f_e = w[3:]
+    f_0 = R_e @ f_e  # Transform force to base frame
+
+    # Moment
+    n_e = w[:3]  
+    n_0 = R_e @ n_e  # Transform moment to base frame
+
+    # Concatenate force and moment to create wrench
+    w_0 = np.concatenate((f_0, n_0), axis=0)
+    
+    # Transpose of the Jacobian
+    J_t = np.transpose(J)
+    
+    # Calculate joint torque
+    tau = J_t @ w_0
     return tau
-
-# Random
-q = [0, 0, 0] 
-w = [10, 5, 2, 0, 0, 0]  # wrech [Fx,Fy,Fz,Wx,Wy,Wz]
-
-# print(computeEffortHW3(q, w))
 #==============================================================================================================#
