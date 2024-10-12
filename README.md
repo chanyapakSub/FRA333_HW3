@@ -189,3 +189,72 @@ print("ผลลัพธ์สุดท้าย:", proveSingularity(q,robot))
   - Singularity ที่หาจาก Robotic Toolbox : นำJacobian เทียบเฟรม base ที่ได้จาก Robotic Toolbox มาทำเช่นเดียวกับวิธี Solution
 - random ค่า q และแทนค่า เพื่อหาสภาวะ Singularity และนำมาเปรียบเทียบกันว่าถูกต้องหรือไม่ 
 - ตัวอย่างค่า q ที่ทำให้เกิด Sigularity ex. q = [5.88029104 1.70964541 3.03725032]
+
+
+## Prove3 : Compute Effort
+
+### solution 
+ฟังก์ชัน computeEffortHW3 คำนวณแรงบิด (torque) ที่เกิดขึ้นกับข้อต่อ (joint) ของหุ่นยนต์ โดยอาศัยการแปลงแรง (force) และโมเมนต์ (moment) ที่กระทำกับเอ็นเอฟเฟกเตอร์ (end-effector) ให้อยู่ในระบบพิกัดฐาน (base frame) ผ่าน Jacobian matrix
+```bash
+def computeEffortHW3(q: list[float], w: list[float]) -> list[float]:
+
+    J = endEffectorJacobianHW3(q)
+    
+    R, P, R_e, p_e = HW3_utils.FKHW3(q)
+
+    # Force
+    f_e = w[3:]
+    f_0 = R_e @ f_e  # Transform force to base frame
+
+    # Moment
+    n_e = w[:3]  
+    n_0 = R_e @ n_e  # Transform moment to base frame
+
+    # Concatenate force and moment to create wrench
+    w_0 = np.concatenate((f_0, n_0), axis=0)
+    
+    # Transpose of the Jacobian
+    J_t = np.transpose(J)
+    
+    # Calculate joint torque
+    tau = J_t @ w_0
+    return tau
+```
+
+### check answer  
+- ฟังก์ชันนี้มีหน้าที่ ตรวจสอบความถูกต้อง ของผลลัพธ์ที่ได้จากฟังก์ชัน computeEffortHW3 โดยเปรียบเทียบกับผลลัพธ์จาก Robotics Toolbox (robot.pay)
+```bash
+def proofEffort(robot):
+    # Generate random q and w
+    q = np.random.rand(3) * 2 * np.pi
+    # w is now an array of 6 elements (moment + force)
+    w = np.random.uniform(-np.pi, np.pi, size=6)  
+
+    # Separate force and moment
+    f_e = w[3:]  # Force
+    n_e = w[:3]  # Moment
+    
+    # Concatenate force and moment into wrench
+    w_e = np.concatenate((f_e, n_e), axis=0)
+
+    # Calculate joint effort using Robotics Toolbox
+    a = robot.pay(W=w_e, q=q, frame=1)
+    
+    # Calculate joint effort using custom function
+    b = computeEffortHW3(q, w)
+
+    # Print the results
+    print(f"Joint Effort RTB : {-a}")
+    print(f"Joint Effort HW3 : {b}")
+    
+    # Compare the results with a tolerance
+    if np.allclose(-a, b, atol=1e-4):  #tolerance as needed
+        print("The results are correct and match!")
+    else:
+        print("The results do not match.")
+        
+proofEffort(robot)
+```
+
+- Result
+![alt text](image.png)
